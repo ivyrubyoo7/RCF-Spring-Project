@@ -1,0 +1,131 @@
+/* FULL PAGE BACKGROUND */
+.add-assets-page {
+    min-height: 100vh;
+    background-image: url("https://i.pinimg.com/736x/b3/5a/a5/b35aa5f180776bf39561dec2fb507783.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SOLID WHITE CARD */
+.add-assets-card {
+    width: 40%;
+    min-height: 60%;
+    padding: 30px;
+
+    border-radius: 14px;
+
+    background-color: #ffffff; /* solid white */
+
+    /* remove glass blur */
+    /* backdrop-filter: blur(20px); */
+    /* -webkit-backdrop-filter: blur(20px); */
+
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+
+    color: #000;
+}
+
+
+/* ===== TITLE WITH LINE ===== */
+.section-title {
+    position: relative;
+    text-align: center;
+    margin-bottom: 30px;
+
+    font-size: 28px;
+    font-weight: 600;
+
+    /* force title above blur layer */
+    z-index: 1;
+}
+
+/* horizontal line */
+.section-title::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+
+    height: 1.5px;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    z-index: 0;
+}
+
+/* text above the line */
+.section-title span {
+    position: relative;
+    z-index: 1;
+
+    padding: 0 18px;
+
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+}
+
+/* ===== FORM ===== */
+.add-assets-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+}
+
+.add-assets-card input {
+    padding: 12px;
+    border-radius: 8px;
+
+    border: 1px solid #d0d7de;           /* light gray border */
+    background-color: #f9fafb;           /* very subtle off-white */
+
+    outline: none;
+    font-size: 16px;
+    color: #000;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* focus state */
+.add-assets-card input:focus {
+    border-color: #1e88e5;               /* primary blue */
+    background-color: #ffffff;
+
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15);
+}
+
+
+.add-assets-card button {
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    background-color: #1e88e5;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.add-assets-card button:hover {
+    background-color: #1565c0;
+}
+.add-assets-card select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #d0d7de;
+    background-color: #f9fafb;
+    font-size: 16px;
+    outline: none;
+}
+
+.add-assets-card select:focus {
+    border-color: #1e88e5;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15);
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DGM Monitoring Dashboard</title>
+</head>
+<body>
+
+<script>
+    /* ===============================
+       MOCK AUTHORIZATION
+       Only DGM can access this page
+       =============================== */
+    let currentUser = {
+        username: "dgm_01",
+        role: "DGM"
+    };
+
+    if (currentUser.role !== "DGM") {
+        alert("Access Denied: DGM only dashboard");
+        window.location.href = "view-assets.html";
+    }
+</script>
+
+<h1>DGM Monitoring Dashboard</h1>
+
+<p>
+    <strong>Logged in as:</strong>
+    <span id="userInfo"></span>
+</p>
+
+<hr>
+
+<!-- ================= SUMMARY SECTION ================= -->
+<h2>Asset Summary</h2>
+
+<table border="1" width="100%">
+    <thead>
+    <tr>
+        <th>Total Assets</th>
+        <th>Available</th>
+        <th>Assigned</th>
+        <th>Under Repair</th>
+        <th>Retired</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr id="summaryRow"></tr>
+    </tbody>
+</table>
+
+<hr>
+
+<!-- ================= DETAILED ASSET TABLE ================= -->
+<h2>All Asset Details</h2>
+
+<table border="1" width="100%">
+    <thead>
+    <tr>
+        <th>Asset Code</th>
+        <th>Type</th>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Serial No</th>
+        <th>Department</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Created By</th>
+        <th>Last Updated By</th>
+        <th>Last Updated At</th>
+    </tr>
+    </thead>
+    <tbody id="assetTableBody"></tbody>
+</table>
+
+<hr>
+
+<!-- ================= EVENT / REASON LOG ================= -->
+<h2>Asset Movement & Reason Log</h2>
+
+<table border="1" width="100%">
+    <thead>
+    <tr>
+        <th>Timestamp</th>
+        <th>Asset Code</th>
+        <th>Action</th>
+        <th>Reason</th>
+        <th>Performed By</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody id="eventTableBody"></tbody>
+</table>
+
+<script>
+    document.getElementById("userInfo").innerText =
+        currentUser.username + " (" + currentUser.role + ")";
+
+    /* ================= ASSET DATA ================= */
+    let assets = JSON.parse(localStorage.getItem("assets")) || [];
+
+    /* ================= STATIC EVENT DATA (FOR NOW) ================= */
+    let events = [
+        {
+            timestamp: "2025-12-20 10:15",
+            assetCode: "IT-CPU-001",
+            action: "UNDER_REPAIR",
+            reason: "System not powering on",
+            performedBy: "manager_01",
+            role: "MANAGER"
+        },
+        {
+            timestamp: "2025-12-20 14:40",
+            assetCode: "IT-MON-003",
+            action: "ASSIGNED",
+            reason: "Issued to Operations control room",
+            performedBy: "it_admin_01",
+            role: "IT_ADMIN"
+        },
+        {
+            timestamp: "2025-12-21 09:20",
+            assetCode: "IT-PRN-002",
+            action: "UNDER_REPAIR",
+            reason: "Paper jam and roller issue",
+            performedBy: "manager_02",
+            role: "MANAGER"
+        },
+        {
+            timestamp: "2025-12-21 11:00",
+            assetCode: "IT-CPU-001",
+            action: "AVAILABLE",
+            reason: "Returned after motherboard replacement",
+            performedBy: "it_admin_01",
+            role: "IT_ADMIN"
+        }
+    ];
+
+    /* ================= SUMMARY LOGIC ================= */
+    let total = assets.length;
+    let available = assets.filter(a => a.status === "AVAILABLE").length;
+    let assigned = assets.filter(a => a.status === "ASSIGNED").length;
+    let repair = assets.filter(a => a.status === "UNDER_REPAIR").length;
+    let retired = assets.filter(a => a.status === "RETIRED").length;
+
+    document.getElementById("summaryRow").innerHTML = `
+        <td>${total}</td>
+        <td>${available}</td>
+        <td>${assigned}</td>
+        <td>${repair}</td>
+        <td>${retired}</td>
+    `;
+
+    /* ================= ASSET TABLE ================= */
+    let assetBody = document.getElementById("assetTableBody");
+
+    assets.forEach(asset => {
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${asset.assetCode}</td>
+            <td>${asset.assetType}</td>
+            <td>${asset.brand}</td>
+            <td>${asset.model}</td>
+            <td>${asset.serialNumber}</td>
+            <td>${asset.department || "-"}</td>
+            <td>${asset.location}</td>
+            <td>${asset.status}</td>
+            <td>${asset.createdBy || "-"}</td>
+            <td>${asset.lastUpdatedBy || "-"}</td>
+            <td>${asset.lastUpdatedAt || "-"}</td>
+        `;
+
+        assetBody.appendChild(row);
+    });
+
+    /* ================= EVENT LOG TABLE ================= */
+    let eventBody = document.getElementById("eventTableBody");
+
+    events.forEach(event => {
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${event.timestamp}</td>
+            <td>${event.assetCode}</td>
+            <td>${event.action}</td>
+            <td>${event.reason}</td>
+            <td>${event.performedBy}</td>
+            <td>${event.role}</td>
+        `;
+
+        eventBody.appendChild(row);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add IT Asset</title>
+</head>
+<body>
+
+<script>
+    /* ===============================
+       MOCK AUTHENTICATION (TEMP)
+       Change role here to test:
+       IT_ADMIN | MANAGER | EMPLOYEE
+       =============================== */
+    let currentUser = {
+        username: "manager_01",
+        role: "MANAGER"   // try changing this
+    };
+
+    // Authorization check
+    if (currentUser.role === "EMPLOYEE") {
+        alert("Access Denied: You are not authorized to add assets.");
+        window.location.href = "view-assets.html";
+    }
+</script>
+
+<h2>Add IT Asset</h2>
+
+<p><strong>Logged in as:</strong> <span id="userRole"></span></p>
+
+<form id="assetForm">
+    <label>Asset Code:</label><br>
+    <input type="text" id="assetCode" required><br><br>
+
+    <label>Asset Type:</label><br>
+    <select id="assetType">
+        <option value="MONITOR">Monitor</option>
+        <option value="CPU">CPU</option>
+        <option value="PRINTER">Printer</option>
+    </select><br><br>
+
+    <label>Brand:</label><br>
+    <input type="text" id="brand" required><br><br>
+
+    <label>Model:</label><br>
+    <input type="text" id="model" required><br><br>
+
+    <label>Serial Number:</label><br>
+    <input type="text" id="serialNumber" required><br><br>
+
+    <label>Location:</label><br>
+    <input type="text" id="location" required><br><br>
+
+    <label>Department:</label><br>
+    <input type="text" id="department" required><br><br>
+
+    <button type="submit">Add Asset</button>
+</form>
+
+<br>
+<a href="view-assets.html">View Assets</a>
+
+<script>
+    document.getElementById("userRole").innerText =
+        currentUser.username + " (" + currentUser.role + ")";
+
+    document.getElementById("assetForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let asset = {
+            assetCode: document.getElementById("assetCode").value,
+            assetType: document.getElementById("assetType").value,
+            brand: document.getElementById("brand").value,
+            model: document.getElementById("model").value,
+            serialNumber: document.getElementById("serialNumber").value,
+            location: document.getElementById("location").value,
+            department: document.getElementById("department").value,
+            status: "AVAILABLE",
+            createdBy: currentUser.username,
+            createdRole: currentUser.role,
+            createdAt: new Date().toLocaleString()
+        };
+
+        let assets = JSON.parse(localStorage.getItem("assets")) || [];
+        assets.push(asset);
+        localStorage.setItem("assets", JSON.stringify(assets));
+
+        alert("Asset added successfully");
+        document.getElementById("assetForm").reset();
+    });
+</script>
+
+</body>
+</html>

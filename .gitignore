@@ -1,0 +1,60 @@
+# ===============================
+# Spring Boot / Maven
+# ===============================
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Keep Maven Wrapper (IMPORTANT)
+!.mvn/wrapper/maven-wrapper.jar
+
+# ===============================
+# Node / React
+# ===============================
+**/node_modules/
+dist/
+build/
+
+# ===============================
+# IntelliJ IDEA
+# ===============================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ===============================
+# Eclipse / STS
+# ===============================
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.apt_generated
+.factorypath
+
+# ===============================
+# VS Code
+# ===============================
+.vscode/
+
+# ===============================
+# NetBeans
+# ===============================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ===============================
+# OS files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Logs
+# ===============================
+*.log

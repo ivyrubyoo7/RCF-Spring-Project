@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View IT Assets</title>
+</head>
+<body style="margin:0; padding:10px;">
+
+<script>
+    /* ===============================
+       MOCK AUTHENTICATION (TEMP)
+       Change role here to test:
+       IT_ADMIN | MANAGER | EMPLOYEE
+       =============================== */
+    let currentUser = {
+        username: "manager_01",
+        role: "MANAGER"
+    };
+</script>
+
+<h2>IT Asset List</h2>
+
+<p>
+    <strong>Logged in as:</strong>
+    <span id="userInfo"></span>
+</p>
+
+<a href="add-asset.html">Add New Asset</a> |
+<a href="dgm-dashboard.html">DGM Dashboard</a>
+
+<br><br>
+
+<table border="1" width="100%">
+    <thead>
+    <tr>
+        <th>Asset Code</th>
+        <th>Asset Type</th>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Serial Number</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="assetTableBody"></tbody>
+</table>
+
+<script>
+    document.getElementById("userInfo").innerText =
+        currentUser.username + " (" + currentUser.role + ")";
+
+    let assets = JSON.parse(localStorage.getItem("assets")) || [];
+    let events = JSON.parse(localStorage.getItem("assetEvents")) || [];
+    let tableBody = document.getElementById("assetTableBody");
+
+    function updateStatus(index, newStatus) {
+        if (!newStatus) return;
+
+        let reason = prompt("Enter reason for status change:");
+        if (!reason) {
+            alert("Reason is mandatory");
+            return;
+        }
+
+        let oldStatus = assets[index].status;
+
+        // Update asset
+        assets[index].status = newStatus;
+        assets[index].lastUpdatedBy = currentUser.username;
+        assets[index].lastUpdatedAt = new Date().toLocaleString();
+
+        // Create event log
+        events.push({
+            timestamp: new Date().toLocaleString(),
+            assetCode: assets[index].assetCode,
+            action: oldStatus + " → " + newStatus,
+            reason: reason,
+            performedBy: currentUser.username,
+            role: currentUser.role
+        });
+
+        localStorage.setItem("assets", JSON.stringify(assets));
+        localStorage.setItem("assetEvents", JSON.stringify(events));
+
+        location.reload();
+    }
+
+    assets.forEach((asset, index) => {
+        let row = document.createElement("tr");
+
+        let actionHtml = "View Only";
+
+        if (currentUser.role === "IT_ADMIN" || currentUser.role === "MANAGER") {
+            actionHtml = `
+                <select onchange="updateStatus(${index}, this.value)">
+                    <option value="">Change Status</option>
+                    <option value="AVAILABLE">AVAILABLE</option>
+                    <option value="ASSIGNED">ASSIGNED</option>
+                    <option value="UNDER_REPAIR">UNDER_REPAIR</option>
+                    <option value="RETIRED">RETIRED</option>
+                </select>
+            `;
+        }
+
+        row.innerHTML = `
+            <td>${asset.assetCode}</td>
+            <td>${asset.assetType}</td>
+            <td>${asset.brand}</td>
+            <td>${asset.model}</td>
+            <td>${asset.serialNumber}</td>
+            <td>${asset.location}</td>
+            <td>${asset.status}</td>
+            <td>${actionHtml}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+</script>
+
+</body>
+</html>
